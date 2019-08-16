@@ -1,146 +1,99 @@
-<html>
-  <head><meta name="generator" content="Hexo 3.9.0">
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
-  
-    <link rel="icon" href="/images/favicon.ico">
-  
-  <title>Hexo</title>
-  <link rel="stylesheet" href="/css/styles.css">
-  <script src="/lib/jquery.js"></script>
-  <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
-  <script src="/js/common.js"></script>
-  <script src="/lib/bootstrap/js/bootstrap.js"></script>
-  <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
-</head>
+extends includes/layout.pug
 
-  <body>
-    <header class="header">
-  <div class="color-bar">
-    <ul>
-      <li class="bar1"></li>
-      <li class="bar2"></li>
-      <li class="bar3"></li>
-      <li class="bar4"></li>
-      <li class="bar5"></li>
-      <li class="bar6"></li>
-    </ul>
-  </div>
-  <div class="header-wrapper">
-    <div class="blog-title">
-      
-        <img class="logo" src="/images/logo.png" alt="logo">
-      
-      <a href="/" class="title">Hexo</a>
-    </div>
-    <nav class="navbar navbar-menu">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" id="nav-btn" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-        </div>
-      </div>
-        <ul class="menu menu-pc">
-          
-            <li class="menu-item">
-              <a href="/" class="menu-item-link"><i class="fa fa-home"></i><span>首页</span></a>
-            </li>
-          
-            <li class="menu-item">
-              <a href="/tags/" class="menu-item-link"><i class="fa fa-tags"></i><span>Tags</span></a>
-            </li>
-          
-            <li class="menu-item">
-              <a href="/archives/" class="menu-item-link"><i class="fa fa-file"></i><span>归档</span></a>
-            </li>
-          
-            <li class="menu-item">
-              <a href="https://github.com/littleee/" class="menu-item-link"><i class="fa fa-github"></i><span>github</span></a>
-            </li>
-          
-        </ul>
-    </nav>
-  </div>
-</header>
-<div class="collapse nav-collapse" style="position:fixed;top:59px;" id="bs-example-navbar-collapse-1">
-  <ul class="menu menu-mobile" style="list-style:none">
-    
-      <li class="menu-item">
-        <a href="/" class="menu-item-link"><i class="fa fa-home"></i><span>首页</span></a>
-      </li>
-    
-      <li class="menu-item">
-        <a href="/tags/" class="menu-item-link"><i class="fa fa-tags"></i><span>Tags</span></a>
-      </li>
-    
-      <li class="menu-item">
-        <a href="/archives/" class="menu-item-link"><i class="fa fa-file"></i><span>归档</span></a>
-      </li>
-    
-      <li class="menu-item">
-        <a href="https://github.com/littleee/" class="menu-item-link"><i class="fa fa-github"></i><span>github</span></a>
-      </li>
-    
-  </ul>
-</div>
+block top_img
+  - var top_img = page.top_img || theme.post_meta.top_img || theme.top_img || config.top_img
+  if (top_img && page.top_img !== false)
+    - var bg_img = top_img !== true ? `background-image: url(${top_img})` : ''
+    - var flag = top_img === true ? 'no-bg' : ''
+    div#top-container(style=bg_img class=flag)
+      include ./includes/header.pug
+      #post-info
+        #post-title= page.title || _p('no_title')
+        #post-meta
+          if (theme.post_meta.date_type)
+            - var date_type = theme.post_meta.date_type === 'updated' ? 'updated' : 'date'
+            time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)]
+          if (theme.post_meta.categories && page.categories.data.length > 0)
+            if (theme.post_meta.date_type)
+              span.post-meta__separator |
+            each item, index in page.categories.data
+              i.fa.fa-inbox.post-meta__icon(aria-hidden="true")
+              a(href=url_for(item.path)).post-meta__categories #[=item.name]
+              if (index < page.categories.data.length - 1)
+                 i.fa.fa-angle-right(aria-hidden="true")
+          if (theme.disqus.enable && theme.disqus.count)
+            if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
+              span.post-meta__separator |
+            i.fa.fa-comment-o.post-meta__icon(aria-hidden="true")
+            a(href=url_for(page.path) + '#disqus_thread')
+              span.disqus-comment-count(data-disqus-identifier=page.path)
+          if (theme.wordcount && theme.wordcount.enable)
+            .post-meta-wordcount
+              span= _p('post.wordcount') + ': '
+              span.word-count= wordcount(page.content)
+              span.post-meta__separator |
+              span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
+  else
+    div#top-container.plain
+      include ./includes/header.pug
 
-    <main class="main">
-      <div class="content">
-        
-  <article class="post">
-    <div class="post-title">
-      <h2 class="title">514!</h2>
-       
-    </div>
-     <div class="post-meta">
-      <span class="post-time">2019-08-16</span>
-    </div>
-    <div class="post-content">
-      <p>估计是什么时候想起来才会来更新吧</p>
-
-    </div>
-  </article>
-  <div class="post-nav">
-    <div class="post-nav-next post-nav-item">
-      
-    </div>
-
-    <span class="post-nav-divider"></span>
-
-    <div class="post-nav-prev post-nav-item">
-    
-    </div>
-  </div>
-
-
-
-      </div>
-        <div class="footer">
-  <div class="footer-wrapper">
-    <div class="copyright">
-      
-      <span>&copy;</span>
-      
-      <span>2017 - 2019</span>
-      
-      <span class="author"><i class="fa fa-user"></i>John Doe</span>
-    </div>
-    
-      <span>Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> </span>
-    
-    
-      <span>|</span> <span>Theme - <a href="https://github.com/littleee/corazon">Corazon</a></span>
-      
-        <span>v1.0.0</span>
-      
-    
-  </div>
-</div>
-
-    </main>
-  </body>
-</html>
+block content
+  article#post(class="")
+    if (!top_img)
+      #post-title.plain= page.title || _p('no_title')
+      #post-meta
+        if (theme.post_meta.date_type)
+          - var date_type = theme.post_meta.date_type === 'updated' ? '' : 'date'
+          time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)]
+        if (theme.post_meta.categories && page.categories.data.length > 0)
+          if (theme.post_meta.date_type)
+            span.post-meta__separator |
+          each item, index in page.categories.data
+            i.fa.fa-inbox(aria-hidden="true")
+            a(href=url_for(item.path)).post-meta__categories  #[=item.name]
+            if (index < page.categories.data.length - 1)
+                i.fa.fa-angle-right.post-meta__separator(aria-hidden="true")
+        if (theme.disqus.enable && theme.disqus.count)
+          if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
+            span.post-meta__separator |
+          i.fa.fa-comment-o(aria-hidden="true")
+          a(href=url_for(page.path) + '#disqus_thread')
+            span.disqus-comment-count(data-disqus-identifier=page.path)
+        if (theme.wordcount && theme.wordcount.enable)
+          span.post-meta__separator |
+          span.post-meta-wordcount
+            span= _p('post.wordcount') + ': '
+            span.word-count= wordcount(page.content)
+            span.post-meta__separator |
+            span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
+    #post-content.article-container!= page.content
+  if (theme.post_copyright && theme.post_copyright.enable)
+    .post-copyright
+      .post-copyright__author
+        span.post-copyright-meta= _p('post.copyright.author') + ": "
+        span.post-copyright-info
+          a(href=`mailto:${config.email}`) #[=config.author]
+      .post-copyright__type
+        span.post-copyright-meta= _p('post.copyright.link') + ": "
+        span.post-copyright-info
+          a(href=url_for(page.permalink)) #[=page.permalink]
+      .post-copyright__notice
+        span.post-copyright-meta= _p('post.copyright.copyright_notice') + ": "
+        span.post-copyright-info!= _p('post.copyright.copyright_content', theme.post_copyright.license_url, theme.post_copyright.license, config.url, config.title)
+  if (theme.post_meta.tags)
+    .post-meta__tag-list
+      each item, index in page.tags.data
+        a(href=url_for(item.path)).post-meta__tags #[=item.name]
+  if (theme.QR_code)
+    if (theme.QR_code.length > 0)
+      .post-qr-code
+        each item in theme.QR_code
+          .post-qr-code-item
+            img.post-qr-code__img(src=(item.itemlist||item).img)
+            .post-qr-code__desc=(item.itemlist||item).text
+  include includes/share/index.pug
+  include includes/pagination.pug
+  if (theme.adv && theme.adv.enable)
+    .post-adv!= theme.adv.info
+  if page.comments !== false
+    include includes/comments/index.pug

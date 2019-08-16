@@ -1,128 +1,34 @@
-<html>
-  <head><meta name="generator" content="Hexo 3.9.0">
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
-  
-    <link rel="icon" href="/images/favicon.ico">
-  
-  <title>Hexo</title>
-  <link rel="stylesheet" href="/css/styles.css">
-  <script src="/lib/jquery.js"></script>
-  <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
-  <script src="/js/common.js"></script>
-  <script src="/lib/bootstrap/js/bootstrap.js"></script>
-  <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
-</head>
+extends includes/layout.pug
 
-  <body>
-    <header class="header">
-  <div class="color-bar">
-    <ul>
-      <li class="bar1"></li>
-      <li class="bar2"></li>
-      <li class="bar3"></li>
-      <li class="bar4"></li>
-      <li class="bar5"></li>
-      <li class="bar6"></li>
-    </ul>
-  </div>
-  <div class="header-wrapper">
-    <div class="blog-title">
-      
-        <img class="logo" src="/images/logo.png" alt="logo">
-      
-      <a href="/" class="title">Hexo</a>
-    </div>
-    <nav class="navbar navbar-menu">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" id="nav-btn" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-        </div>
-      </div>
-        <ul class="menu menu-pc">
-          
-            <li class="menu-item">
-              <a href="/" class="menu-item-link"><i class="fa fa-home"></i><span>首页</span></a>
-            </li>
-          
-            <li class="menu-item">
-              <a href="/tags/" class="menu-item-link"><i class="fa fa-tags"></i><span>Tags</span></a>
-            </li>
-          
-            <li class="menu-item">
-              <a href="/archives/" class="menu-item-link"><i class="fa fa-file"></i><span>归档</span></a>
-            </li>
-          
-            <li class="menu-item">
-              <a href="https://github.com/littleee/" class="menu-item-link"><i class="fa fa-github"></i><span>github</span></a>
-            </li>
-          
-        </ul>
-    </nav>
-  </div>
-</header>
-<div class="collapse nav-collapse" style="position:fixed;top:59px;" id="bs-example-navbar-collapse-1">
-  <ul class="menu menu-mobile" style="list-style:none">
-    
-      <li class="menu-item">
-        <a href="/" class="menu-item-link"><i class="fa fa-home"></i><span>首页</span></a>
-      </li>
-    
-      <li class="menu-item">
-        <a href="/tags/" class="menu-item-link"><i class="fa fa-tags"></i><span>Tags</span></a>
-      </li>
-    
-      <li class="menu-item">
-        <a href="/archives/" class="menu-item-link"><i class="fa fa-file"></i><span>归档</span></a>
-      </li>
-    
-      <li class="menu-item">
-        <a href="https://github.com/littleee/" class="menu-item-link"><i class="fa fa-github"></i><span>github</span></a>
-      </li>
-    
-  </ul>
-</div>
-
-    <main class="main">
-      <div class="content">
-        
-  <div class="tags">
-  <h2 class="tags-title">Tags</h2>
-  <div class="tags-wrapper">
-    
-  </div>
-</div>
-
-
-
-      </div>
-        <div class="footer">
-  <div class="footer-wrapper">
-    <div class="copyright">
-      
-      <span>&copy;</span>
-      
-      <span>2017 - 2019</span>
-      
-      <span class="author"><i class="fa fa-user"></i>John Doe</span>
-    </div>
-    
-      <span>Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> </span>
-    
-    
-      <span>|</span> <span>Theme - <a href="https://github.com/littleee/corazon">Corazon</a></span>
-      
-        <span>v1.0.0</span>
-      
-    
-  </div>
-</div>
-
-    </main>
-  </body>
-</html>
+block content
+  if page.type === 'tags'
+    .tag-cloud
+      .tag-cloud__title= _p('page.tag')
+        |  - 
+        span.tag-cloud__amount= site.tags.length
+      - var start_color = theme.theme_color ? (theme.theme_color.tag_start_color || '#A4D8FA'): '#A4D8FA'
+      - var end_color = theme.theme_color ? (theme.theme_color.tag_end_color || '#1B9EF3') : '#1B9EF3'
+      .tag-cloud-tags!= tagcloud({min_font: 12, max_font: 30, amount: 200, color: true, start_color, end_color})
+    if page.comments !== false
+      include includes/comments/index.pug
+  else if page.type === 'categories'
+    #post-content
+      .category-lists
+        .category__title= _p('page.category')
+          |  - 
+          span.category__amount= site.categories.length
+        div!= list_categories()
+    if page.comments !== false
+      include includes/comments/index.pug
+  else if page.type === 'slides'
+    include ./includes/mixins/slide.pug
+    +slideArticle()
+    if page.comments !== false
+      include includes/comments/index.pug
+  else
+    article#page
+      h1= page.title
+      .article-container!= page.content
+    include includes/pagination.pug
+    if page.comments !== false
+      include includes/comments/index.pug
